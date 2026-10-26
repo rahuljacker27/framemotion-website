@@ -1,0 +1,1903 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth dark overflow-x-hidden">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Framemotion — Cinematic Creative Agency | Every Frame Has Emotion</title>
+  <meta name="description" content="Framemotion is an ultra-modern creative agency crafting dark cinematic commercial films, social media reels, and editorial visual storytelling." />
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23050505'/><circle cx='50' cy='50' r='28' fill='none' stroke='%2300f2fe' stroke-width='6'/><circle cx='50' cy='50' r='14' fill='%23ff0055'/></svg>" />
+
+  <!-- Google Fonts: Syne (Artistic Motion Serif/Display), Inter (Clean UI), Space Mono (Camera HUD) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@1,400;1,600;1,700&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS 3.4 via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            pitch: '#050505',
+            charcoal: '#0F0F11',
+            surface: '#151518',
+            surfaceLight: '#1C1C22',
+            borderDark: 'rgba(255, 255, 255, 0.08)',
+            borderGlow: 'rgba(0, 242, 254, 0.35)',
+            neonCyan: '#00f2fe',
+            neonCyanMuted: 'rgba(0, 242, 254, 0.15)',
+            electricPurple: '#7f00ff',
+            electricPurpleMuted: 'rgba(127, 0, 255, 0.15)',
+            recRed: '#ff0055',
+          },
+          fontFamily: {
+            syne: ['Syne', 'sans-serif'],
+            serifExpressive: ['"Playfair Display"', 'Georgia', 'serif'],
+            inter: ['Inter', 'sans-serif'],
+            mono: ['"Space Mono"', 'monospace'],
+          },
+          animation: {
+            'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'rec-blink': 'recBlink 1.2s ease-in-out infinite',
+            'float-slow': 'float 6s ease-in-out infinite',
+            'radar-spin': 'spin 12s linear infinite',
+            'glow-pulse': 'glowPulse 3s ease-in-out infinite',
+          },
+          keyframes: {
+            recBlink: {
+              '0%, 100%': { opacity: '1', transform: 'scale(1)' },
+              '50%': { opacity: '0.2', transform: 'scale(0.85)' },
+            },
+            float: {
+              '0%, 100%': { transform: 'translateY(0)' },
+              '50%': { transform: 'translateY(-8px)' },
+            },
+            glowPulse: {
+              '0%, 100%': { boxShadow: '0 0 15px rgba(0, 242, 254, 0.3)' },
+              '50%': { boxShadow: '0 0 35px rgba(0, 242, 254, 0.6), 0 0 10px rgba(127, 0, 255, 0.4)' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- React 18 & ReactDOM -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+
+  <!-- Babel Standalone for JSX compilation in browser -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <!-- Lucide Icons standalone -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #050505;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #222228;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #00f2fe;
+    }
+
+    /* Film Grain Noise Background Overlay */
+    .film-grain {
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.035'/%3E%3C/svg%3E");
+    }
+
+    /* Cinematic 1px Grid Lines */
+    .cinema-grid-bg {
+      background-size: 48px 48px;
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+    }
+
+    /* Smooth glow border utility */
+    .neon-border-cyan {
+      box-shadow: 0 0 20px -3px rgba(0, 242, 254, 0.35);
+    }
+    .neon-border-purple {
+      box-shadow: 0 0 20px -3px rgba(127, 0, 255, 0.4);
+    }
+
+    /* Anamorphic letterbox bars */
+    .letterbox-bar {
+      transition: height 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* Hide standard cursor when custom reticle is active */
+    body.custom-cursor-enabled {
+      cursor: crosshair;
+    }
+
+    /* Text stroke utility */
+    .text-stroke-white {
+      -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.75);
+      color: transparent;
+    }
+  </style>
+</head>
+
+<body class="bg-pitch text-white font-inter selection:bg-neonCyan selection:text-pitch overflow-x-hidden antialiased cinema-grid-bg relative w-full max-w-full">
+  <!-- Film Grain Overlay -->
+  <div class="pointer-events-none fixed inset-0 z-50 film-grain"></div>
+
+  <!-- Letterbox Overlays (Toggled via Camera Mode) -->
+  <div id="letterbox-top" class="letterbox-bar fixed top-0 left-0 w-full h-0 bg-black z-40 pointer-events-none border-b border-white/5"></div>
+  <div id="letterbox-bottom" class="letterbox-bar fixed bottom-0 left-0 w-full h-0 bg-black z-40 pointer-events-none border-t border-white/5"></div>
+
+  <!-- React Mount Point -->
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect, useRef } = React;
+
+    // --- Audio Ambient Synth (Synthesizes deep cinematic atmospheric drone) ---
+    class CinematicAudioEngine {
+      constructor() {
+        this.ctx = null;
+        this.osc1 = null;
+        this.osc2 = null;
+        this.filter = null;
+        this.gain = null;
+        this.isPlaying = false;
+      }
+
+      init() {
+        if (!this.ctx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          this.ctx = new AudioContext();
+        }
+      }
+
+      start() {
+        this.init();
+        if (this.ctx.state === 'suspended') {
+          this.ctx.resume();
+        }
+
+        const now = this.ctx.currentTime;
+        this.gain = this.ctx.createGain();
+        this.gain.gain.setValueAtTime(0.001, now);
+        this.gain.gain.exponentialRampToValueAtTime(0.12, now + 3);
+
+        this.filter = this.ctx.createBiquadFilter();
+        this.filter.type = 'lowpass';
+        this.filter.frequency.setValueAtTime(140, now);
+
+        // Low drone oscillators in perfect fifth (D1 and A1)
+        this.osc1 = this.ctx.createOscillator();
+        this.osc1.type = 'sawtooth';
+        this.osc1.frequency.setValueAtTime(36.71, now); // D1
+
+        this.osc2 = this.ctx.createOscillator();
+        this.osc2.type = 'sine';
+        this.osc2.frequency.setValueAtTime(55.00, now); // A1
+
+        // Subtle LFO for breathing filter
+        this.lfo = this.ctx.createOscillator();
+        this.lfo.frequency.setValueAtTime(0.15, now);
+        this.lfoGain = this.ctx.createGain();
+        this.lfoGain.gain.setValueAtTime(60, now);
+        this.lfo.connect(this.lfoGain);
+        this.lfoGain.connect(this.filter.frequency);
+
+        this.osc1.connect(this.filter);
+        this.osc2.connect(this.filter);
+        this.filter.connect(this.gain);
+        this.gain.connect(this.ctx.destination);
+
+        this.osc1.start(now);
+        this.osc2.start(now);
+        this.lfo.start(now);
+        this.isPlaying = true;
+      }
+
+      stop() {
+        if (!this.isPlaying || !this.gain || !this.ctx) return;
+        const now = this.ctx.currentTime;
+        this.gain.gain.exponentialRampToValueAtTime(0.0001, now + 1.5);
+        setTimeout(() => {
+          try {
+            if (this.osc1) this.osc1.stop();
+            if (this.osc2) this.osc2.stop();
+            if (this.lfo) this.lfo.stop();
+          } catch (e) {}
+          this.isPlaying = false;
+        }, 1600);
+      }
+
+      toggle() {
+        if (this.isPlaying) {
+          this.stop();
+          return false;
+        } else {
+          this.start();
+          return true;
+        }
+      }
+    }
+
+    const audioEngine = new CinematicAudioEngine();
+
+    // ==========================================
+    // COMPONENT: Custom Cinema Cursor Reticle
+    // ==========================================
+    function CustomCursor() {
+      const [pos, setPos] = useState({ x: -100, y: -100 });
+      const [hovered, setHovered] = useState(false);
+      const [hoverText, setHoverText] = useState('');
+      const [visible, setVisible] = useState(false);
+
+      useEffect(() => {
+        const handleMouseMove = (e) => {
+          setPos({ x: e.clientX, y: e.clientY });
+          if (!visible) setVisible(true);
+        };
+
+        const handleMouseLeave = () => setVisible(false);
+
+        const handleMouseOver = (e) => {
+          const target = e.target.closest('[data-cursor]');
+          if (target) {
+            setHovered(true);
+            setHoverText(target.getAttribute('data-cursor') || '');
+          } else {
+            const clickable = e.target.closest('a, button, input, textarea, select, [role="button"]');
+            setHovered(!!clickable);
+            setHoverText('');
+          }
+        };
+
+        window.addEventListener('mousemove', handleMouseMove);
+        document.addEventListener('mouseleave', handleMouseLeave);
+        document.addEventListener('mouseover', handleMouseOver);
+
+        return () => {
+          window.removeEventListener('mousemove', handleMouseMove);
+          document.removeEventListener('mouseleave', handleMouseLeave);
+          document.removeEventListener('mouseover', handleMouseOver);
+        };
+      }, [visible]);
+
+      if (!visible) return null;
+
+      return (
+        <div 
+          className="pointer-events-none fixed z-50 transition-transform duration-75 ease-out hidden md:block"
+          style={{
+            transform: `translate3d(${pos.x}px, ${pos.y}px, 0)`,
+            left: 0,
+            top: 0
+          }}
+        >
+          {/* Main Reticle Center Dot */}
+          <div className={`-translate-x-1/2 -translate-y-1/2 rounded-full transition-all duration-200 flex items-center justify-center ${
+            hovered 
+              ? 'w-12 h-12 bg-neonCyan/15 border border-neonCyan backdrop-blur-sm' 
+              : 'w-4 h-4 bg-neonCyan/40 border border-neonCyan/80'
+          }`}>
+            <div className="w-1.5 h-1.5 rounded-full bg-neonCyan"></div>
+            {hoverText && (
+              <span className="absolute -bottom-6 text-[9px] font-mono tracking-widest text-neonCyan uppercase font-bold whitespace-nowrap bg-black/80 px-1.5 py-0.5 rounded border border-neonCyan/40">
+                {hoverText}
+              </span>
+            )}
+          </div>
+          {/* Subtle Outer Corner Crosshairs */}
+          <div className={`absolute -translate-x-1/2 -translate-y-1/2 w-8 h-8 pointer-events-none transition-opacity duration-300 ${
+            hovered ? 'opacity-90 scale-125' : 'opacity-40'
+          }`}>
+            <span className="absolute top-0 left-0 w-2 h-[1px] bg-neonCyan"></span>
+            <span className="absolute top-0 left-0 h-2 w-[1px] bg-neonCyan"></span>
+            <span className="absolute top-0 right-0 w-2 h-[1px] bg-neonCyan"></span>
+            <span className="absolute top-0 right-0 h-2 w-[1px] bg-neonCyan"></span>
+            <span className="absolute bottom-0 left-0 w-2 h-[1px] bg-neonCyan"></span>
+            <span className="absolute bottom-0 left-0 h-2 w-[1px] bg-neonCyan"></span>
+            <span className="absolute bottom-0 right-0 w-2 h-[1px] bg-neonCyan"></span>
+            <span className="absolute bottom-0 right-0 h-2 w-[1px] bg-neonCyan"></span>
+          </div>
+        </div>
+      );
+    }
+
+    // ==========================================
+    // COMPONENT: Navigation & Header
+    // ==========================================
+    function Header({ onOpenContact, onToggleLetterbox, letterboxActive, audioPlaying, onToggleAudio }) {
+      const [isScrolled, setIsScrolled] = useState(false);
+      const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+      const [timecode, setTimecode] = useState("00:00:06:35");
+
+      useEffect(() => {
+        const handleScroll = () => {
+          setIsScrolled(window.scrollY > 40);
+        };
+        window.addEventListener('scroll', handleScroll);
+
+        // Frame-accurate ticking timecode
+        let frame = 35;
+        let sec = 6;
+        let min = 0;
+        const interval = setInterval(() => {
+          frame++;
+          if (frame >= 24) {
+            frame = 0;
+            sec++;
+            if (sec >= 60) {
+              sec = 0;
+              min++;
+            }
+          }
+          const fStr = frame.toString().padStart(2, '0');
+          const sStr = sec.toString().padStart(2, '0');
+          const mStr = min.toString().padStart(2, '0');
+          setTimecode(`00:${mStr}:${sStr}:${fStr}`);
+        }, 1000 / 24);
+
+        return () => {
+          window.removeEventListener('scroll', handleScroll);
+          clearInterval(interval);
+        };
+      }, []);
+
+      return (
+        <header className={`fixed top-0 left-0 right-0 z-40 transition-all duration-500 ${
+          isScrolled 
+            ? 'bg-pitch/85 backdrop-blur-md border-b border-borderDark py-3 shadow-2xl' 
+            : 'bg-gradient-to-b from-pitch via-pitch/70 to-transparent py-5'
+        }`}>
+          {/* Main Top Bar */}
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center justify-between">
+              
+              {/* Left: Brand Logo Wordmark */}
+              <a href="#" className="flex items-center gap-3 group focus:outline-none" data-cursor="HOME">
+                <div className="relative w-8 h-8 rounded-lg border border-neonCyan/40 bg-surface/80 flex items-center justify-center overflow-hidden transition-all duration-300 group-hover:border-neonCyan group-hover:shadow-[0_0_15px_rgba(0,242,254,0.4)]">
+                  {/* Camera viewfinder icon */}
+                  <div className="w-4 h-3 border border-white/80 rounded-sm relative flex items-center justify-center">
+                    <div className="w-1.5 h-1.5 rounded-full bg-neonCyan"></div>
+                    <span className="absolute -top-1 -right-1 w-1 h-1 bg-recRed rounded-full animate-rec-blink"></span>
+                  </div>
+                  {/* Subtle corner ticks */}
+                  <span className="absolute top-0.5 left-0.5 text-[7px] font-mono text-neonCyan/50 leading-none">┌</span>
+                  <span className="absolute bottom-0.5 right-0.5 text-[7px] font-mono text-neonCyan/50 leading-none">┘</span>
+                </div>
+
+                <div className="flex flex-col">
+                  <div className="flex items-center gap-1.5">
+                    <span className="font-syne font-extrabold text-xl tracking-tight text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:via-neonCyan group-hover:to-white transition-all">
+                      Framemotion
+                    </span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-neonCyan animate-pulse"></span>
+                  </div>
+                  <span className="font-mono text-[9px] uppercase tracking-[0.28em] text-white/40 -mt-1 hidden sm:block">
+                    Cinematic Studio
+                  </span>
+                </div>
+              </a>
+
+              {/* Center: Navigation Links */}
+              <nav className="hidden md:flex items-center space-x-1 lg:space-x-2 bg-surface/40 backdrop-blur-md px-4 py-1.5 rounded-full border border-white/5">
+                {[
+                  { name: 'Work', href: '#work' },
+                  { name: 'Scenic', href: '#scenic' },
+                  { name: 'Services', href: '#services' },
+                  { name: 'Process', href: '#process' },
+                  { name: 'Journal', href: '#journal' },
+                  { name: 'Contact', href: '#contact' },
+                ].map((item) => (
+                  <a
+                    key={item.name}
+                    href={item.href}
+                    data-cursor="NAV"
+                    className="px-3.5 py-1 text-xs font-medium tracking-wider text-white/70 hover:text-white hover:text-neonCyan transition-colors rounded-full hover:bg-white/5"
+                  >
+                    [{item.name}]
+                  </a>
+                ))}
+              </nav>
+
+              {/* Right: Actions & Button */}
+              <div className="flex items-center gap-3">
+                
+                {/* Audio Ambience Toggle */}
+                <button
+                  onClick={onToggleAudio}
+                  title={audioPlaying ? "Mute Cinematic Ambience" : "Play Cinematic Ambience"}
+                  className={`hidden sm:flex items-center gap-2 px-2.5 py-1.5 rounded-full text-[10px] font-mono tracking-wider border transition-all ${
+                    audioPlaying 
+                      ? 'border-neonCyan bg-neonCyan/10 text-neonCyan shadow-[0_0_12px_rgba(0,242,254,0.3)]' 
+                      : 'border-white/10 text-white/50 hover:text-white hover:border-white/30'
+                  }`}
+                  data-cursor="SOUND"
+                >
+                  <div className="flex items-end gap-0.5 h-3">
+                    <span className={`w-0.5 bg-current rounded-full transition-all ${audioPlaying ? 'h-3 animate-pulse' : 'h-1'}`}></span>
+                    <span className={`w-0.5 bg-current rounded-full transition-all ${audioPlaying ? 'h-2 animate-pulse' : 'h-1.5'}`}></span>
+                    <span className={`w-0.5 bg-current rounded-full transition-all ${audioPlaying ? 'h-3.5 animate-pulse' : 'h-2'}`}></span>
+                  </div>
+                  <span>{audioPlaying ? 'SFX ON' : 'AUDIO'}</span>
+                </button>
+
+                {/* Scope / Aspect Ratio Letterbox Toggle */}
+                <button
+                  onClick={onToggleLetterbox}
+                  title="Toggle 2.39:1 Anamorphic Cinema Scope"
+                  className={`hidden lg:flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-[10px] font-mono tracking-wider border transition-all ${
+                    letterboxActive 
+                      ? 'border-electricPurple bg-electricPurple/15 text-white' 
+                      : 'border-white/10 text-white/40 hover:text-white'
+                  }`}
+                  data-cursor="SCOPE"
+                >
+                  <span>2.39:1</span>
+                </button>
+
+                {/* Primary CTA: "Get in Touch" with glowing neon border */}
+                <button
+                  onClick={onOpenContact}
+                  data-cursor="CLICK"
+                  className="relative group overflow-hidden rounded-full p-[1px] focus:outline-none"
+                >
+                  <span className="absolute inset-0 bg-gradient-to-r from-neonCyan via-electricPurple to-neonCyan rounded-full opacity-70 group-hover:opacity-100 blur-[2px] transition-opacity duration-300"></span>
+                  <span className="relative flex items-center gap-2 px-4 sm:px-5 py-2 rounded-full bg-pitch transition-all duration-300 group-hover:bg-pitch/80 text-xs sm:text-sm font-medium tracking-wide text-white group-hover:text-neonCyan">
+                    <span>Get in Touch</span>
+                    <svg className="w-3.5 h-3.5 transform transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                    </svg>
+                  </span>
+                </button>
+
+                {/* Mobile Menu Hamburger */}
+                <button
+                  onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                  className="md:hidden p-2 text-white/70 hover:text-white focus:outline-none"
+                  aria-label="Toggle Menu"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    {mobileMenuOpen ? (
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"/>
+                    ) : (
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7"/>
+                    )}
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            {/* Bottom line of Header: Minimal timeline / timecode labels */}
+            <div className="hidden sm:flex items-center justify-between pt-2.5 mt-2.5 border-t border-white/[0.06] text-[10px] font-mono text-white/40 tracking-wider">
+              <div className="flex items-center gap-4">
+                <span className="flex items-center gap-1.5 text-neonCyan/80">
+                  <span className="w-1.5 h-1.5 rounded-full bg-recRed animate-rec-blink"></span>
+                  <span>TC: {timecode}</span>
+                </span>
+                <span className="text-white/20">|</span>
+                <span>FPS: 24.000</span>
+                <span className="hidden md:inline text-white/20">|</span>
+                <span className="hidden md:inline">SHUTTER: 1/48</span>
+                <span className="hidden md:inline text-white/20">|</span>
+                <span className="hidden md:inline">ISO: 800</span>
+              </div>
+
+              <div className="flex items-center gap-4">
+                <span className="hidden lg:inline text-white/30">PRORES 422HQ • 4K DCI</span>
+                <span className="hidden lg:inline text-white/20">|</span>
+                <span>RANGE: 00:00:06:35 — 00:09:33:38</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Mobile Navigation Dropdown */}
+          {mobileMenuOpen && (
+            <div className="md:hidden bg-pitch/95 border-b border-white/10 px-6 py-6 space-y-4 backdrop-blur-xl animate-fadeIn">
+              <div className="flex flex-col space-y-3 font-syne text-lg">
+                {[
+                  { name: 'Selected Work', href: '#work' },
+                  { name: 'Scenic & Landscapes', href: '#scenic' },
+                  { name: 'Services & Direction', href: '#services' },
+                  { name: 'Our Process', href: '#process' },
+                  { name: 'Journal', href: '#journal' },
+                  { name: 'Let’s Collaborate', href: '#contact' },
+                ].map((item) => (
+                  <a
+                    key={item.name}
+                    href={item.href}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="text-white/80 hover:text-neonCyan transition-colors py-1 border-b border-white/5"
+                  >
+                    {item.name}
+                  </a>
+                ))}
+              </div>
+              <div className="pt-2 flex items-center justify-between text-xs font-mono text-white/50">
+                <button
+                  onClick={onToggleAudio}
+                  className="flex items-center gap-2 text-neonCyan"
+                >
+                  <span>{audioPlaying ? '● SOUND PLAYING' : '○ AMBIENT SOUND'}</span>
+                </button>
+                <span>TC {timecode}</span>
+              </div>
+            </div>
+          )}
+        </header>
+      );
+    }
+
+    // ==========================================
+    // COMPONENT: Section 2 - Hero Section ("Cinematic Immersion")
+    // ==========================================
+    function Hero({ onOpenReel, onScrollToWork }) {
+      return (
+        <section className="relative min-h-screen w-full flex items-center justify-center overflow-hidden pt-20 pb-16">
+          
+          {/* Full-Screen Video Background with Fallback Poster */}
+          <div className="absolute inset-0 w-full h-full z-0 overflow-hidden">
+            <video
+              autoPlay
+              loop
+              muted
+              playsInline
+              poster="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=2000&q=85"
+              className="w-full h-full object-cover object-center scale-105 filter brightness-75 contrast-110 saturate-[0.85] transition-transform duration-[10000ms] ease-out hover:scale-100"
+            >
+              {/* Fallback to high quality atmospheric mist/mountain MP4 */}
+              <source src="https://assets.mixkit.co/videos/preview/mixkit-fog-over-the-mountain-peaks-42998-large.mp4" type="video/mp4" />
+              <source src="https://cdn.coverr.co/videos/coverr-mist-in-the-mountains-2746/1080p.mp4" type="video/mp4" />
+            </video>
+
+            {/* Dark Cinematic Gradients for Readability */}
+            <div className="absolute inset-0 bg-gradient-to-t from-pitch via-pitch/60 to-pitch/70"></div>
+            <div className="absolute inset-0 bg-gradient-to-r from-pitch/80 via-transparent to-pitch/80"></div>
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-transparent via-pitch/40 to-pitch"></div>
+          </div>
+
+          {/* Camera Viewfinder Corner Grid Brackets */}
+          <div className="pointer-events-none absolute inset-3 sm:inset-12 z-20 flex flex-col justify-between">
+            <div className="flex justify-between items-start">
+              <div className="text-neonCyan/40 font-mono text-[10px] sm:text-xs">
+                <div>┌ [ 4K RAW ]</div>
+                <div className="text-[9px] sm:text-[10px] text-white/30 hidden min-[400px]:block">LUT: ARRI_709_V3</div>
+              </div>
+              
+              {/* Top Right: Camera-lens REC [•] Graphic */}
+              <div className="flex items-center gap-1.5 sm:gap-2 bg-pitch/60 backdrop-blur-md px-2 sm:px-3 py-1 sm:py-1.5 rounded-md border border-white/10 font-mono text-[10px] sm:text-xs">
+                <span className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-recRed animate-rec-blink"></span>
+                <span className="font-bold tracking-widest text-white">REC</span>
+                <span className="text-white/40">●</span>
+                <span className="text-neonCyan tracking-wider text-[9px] sm:text-xs">00:04:12:18</span>
+                <span className="text-white/30">┐</span>
+              </div>
+            </div>
+
+            <div className="hidden sm:flex justify-between items-end">
+              <div className="text-white/30 font-mono text-xs">
+                <div>└ SENSOR: FULL FRAME 35MM</div>
+                <div className="text-[10px] text-neonCyan/50">AUDIO: CH1 -18dB | CH2 -20dB</div>
+              </div>
+              <div className="text-white/30 font-mono text-xs text-right">
+                <div>BATTERY: 94% [14.4V]</div>
+                <div className="text-[10px]">FPS: 24.000 ┘</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Hero Content Overlay */}
+          <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex flex-col items-center justify-center text-center my-auto">
+            
+            {/* Expressive Sub-badge */}
+            <div className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 py-1 sm:py-1.5 rounded-full bg-surface/60 border border-white/10 backdrop-blur-md mb-6 animate-pulse-slow max-w-full">
+              <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-neonCyan flex-shrink-0"></span>
+              <span className="font-mono text-[9px] min-[360px]:text-[10px] sm:text-[11px] uppercase tracking-[0.15em] sm:tracking-[0.25em] text-white/80 truncate">
+                A Creative Production House
+              </span>
+              <span className="text-white/30 text-xs">/</span>
+              <span className="text-[9px] sm:text-[10px] font-mono text-neonCyan flex-shrink-0">EST. 2024</span>
+            </div>
+
+            {/* Giant, Stylish Expressive H1: "Framemotion" */}
+            <div className="relative mb-4 group cursor-default select-none max-w-full w-full flex items-center justify-center">
+              <h1 className="font-syne font-black text-[clamp(2.1rem,9.3vw,11rem)] tracking-tight leading-none text-white drop-shadow-[0_10px_35px_rgba(0,0,0,0.9)] break-normal">
+                Framemotion
+              </h1>
+              {/* Expressive Italicized Shadow Underlay */}
+              <div className="absolute inset-0 font-serifExpressive italic font-bold text-[clamp(2.1rem,9.3vw,11rem)] tracking-tight leading-none text-transparent text-stroke-white opacity-20 pointer-events-none transform translate-y-0.5 sm:translate-y-1 flex items-center justify-center">
+                Framemotion
+              </div>
+            </div>
+
+            {/* Subtitle below H1: "Every Frame Has Emotion" in medium sans-serif with wide tracking */}
+            <p className="font-inter font-medium text-xs min-[380px]:text-sm sm:text-xl md:text-2xl tracking-[0.15em] sm:tracking-[0.25em] uppercase text-white/85 max-w-3xl mb-8 sm:mb-10 drop-shadow-md px-2">
+              Every Frame Has Emotion
+            </p>
+
+            {/* Center Play Button Overlay with Pulse Ripple */}
+            <div className="my-2 mb-12 relative flex items-center justify-center">
+              <button
+                onClick={onOpenReel}
+                data-cursor="PLAY REEL"
+                className="relative group w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-pitch/70 border border-neonCyan/50 backdrop-blur-md flex items-center justify-center hover:scale-110 hover:border-neonCyan transition-all duration-300 shadow-[0_0_30px_rgba(0,242,254,0.3)] focus:outline-none"
+              >
+                {/* Pulsing Ripple rings */}
+                <span className="absolute -inset-2 rounded-full border border-neonCyan/30 animate-ping opacity-60"></span>
+                <span className="absolute -inset-4 rounded-full border border-electricPurple/20 animate-pulse"></span>
+                
+                {/* Play Triangle Icon */}
+                <div className="w-0 h-0 border-y-[10px] border-y-transparent border-l-[16px] border-l-white group-hover:border-l-neonCyan ml-1.5 transition-colors duration-200"></div>
+                
+                {/* Circular Spinning Text */}
+                <svg className="absolute inset-0 w-full h-full animate-radar-spin pointer-events-none" viewBox="0 0 100 100">
+                  <path id="circlePath" d="M 50, 50 m -37, 0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0" fill="none" />
+                  <text className="text-[7.5px] font-mono uppercase tracking-[0.22em] fill-white/50">
+                    <textPath xlinkHref="#circlePath">
+                      • CINEMATIC SHOWREEL 2026 • 4K DCI •
+                    </textPath>
+                  </text>
+                </svg>
+              </button>
+            </div>
+
+            {/* Bottom-Left CTAs & Meta */}
+            <div className="w-full flex flex-col sm:flex-row items-center justify-between gap-6 pt-6 border-t border-white/[0.08]">
+              
+              {/* Call to Actions */}
+              <div className="flex flex-wrap sm:flex-nowrap items-center justify-center gap-3 sm:gap-4">
+                {/* Primary Button: Glowing neon cyan border labeled "VIEW REEL" */}
+                <button
+                  onClick={onOpenReel}
+                  data-cursor="PLAY"
+                  className="relative group overflow-hidden rounded-full p-[1.5px] focus:outline-none transition-all duration-300 hover:scale-105"
+                >
+                  <span className="absolute inset-0 bg-gradient-to-r from-neonCyan via-electricPurple to-neonCyan rounded-full opacity-80 group-hover:opacity-100 blur-[2px] transition-all"></span>
+                  <span className="relative flex items-center gap-2.5 px-5 sm:px-7 py-2.5 sm:py-3 rounded-full bg-pitch transition-all duration-300 group-hover:bg-pitch/90 text-xs sm:text-sm font-semibold tracking-wider uppercase text-white group-hover:text-neonCyan">
+                    <span className="w-2 h-2 rounded-full bg-neonCyan animate-ping"></span>
+                    <span>View Reel</span>
+                    <span className="text-white/40 group-hover:text-neonCyan font-mono">[02:14]</span>
+                  </span>
+                </button>
+
+                {/* Secondary Button: Ghost button with fine border labeled "WORK" */}
+                <button
+                  onClick={onScrollToWork}
+                  data-cursor="EXPLORE"
+                  className="px-5 sm:px-7 py-2.5 sm:py-3 rounded-full border border-white/20 hover:border-white/60 bg-white/[0.02] hover:bg-white/[0.08] backdrop-blur-sm text-xs sm:text-sm font-semibold tracking-wider uppercase text-white/90 hover:text-white transition-all duration-300"
+                >
+                  Work
+                </button>
+              </div>
+
+              {/* Client & Production Stats */}
+              <div className="hidden md:flex items-center gap-6 text-left font-mono text-xs text-white/50">
+                <div>
+                  <div className="text-white font-bold text-sm">85M+</div>
+                  <div className="text-[10px] tracking-wider uppercase text-white/40">Organic Views</div>
+                </div>
+                <div className="w-[1px] h-6 bg-white/10"></div>
+                <div>
+                  <div className="text-white font-bold text-sm">42+</div>
+                  <div className="text-[10px] tracking-wider uppercase text-white/40">Global Brands</div>
+                </div>
+                <div className="w-[1px] h-6 bg-white/10"></div>
+                <div>
+                  <div className="text-neonCyan font-bold text-sm">8K RAW</div>
+                  <div className="text-[10px] tracking-wider uppercase text-white/40">Master Grading</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          {/* Bottom-Center: Interactive Vertical Mouse "Scroll to Explore" Visual Indicator */}
+          <div 
+            onClick={onScrollToWork}
+            className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-2 cursor-pointer group focus:outline-none"
+            data-cursor="SCROLL"
+          >
+            <span className="font-mono text-[9px] uppercase tracking-[0.28em] text-white/40 group-hover:text-neonCyan transition-colors">
+              Scroll to explore
+            </span>
+            <div className="w-5 h-8 rounded-full border border-white/20 group-hover:border-neonCyan flex items-start justify-center p-1 transition-colors">
+              <span className="w-1 h-2 rounded-full bg-neonCyan animate-bounce"></span>
+            </div>
+          </div>
+
+        </section>
+      );
+    }
+
+    // ==========================================
+    // COMPONENT: Section 3 - Selected Work Filter & Vertical 9:16 Masonry Grid
+    // ("The Social & Short-form Lab")
+    // ==========================================
+    function SelectedWork({ onSelectReel }) {
+      const [filter, setFilter] = useState('All');
+
+      const items = [
+        {
+          id: 'work-1',
+          title: 'URBAN NIGHTS • BRAND',
+          category: 'Commercial',
+          views: '142.8K',
+          duration: '0:15',
+          aspect: '9:16',
+          badge: '4K DCI',
+          tagline: 'Cyberpunk nocturnal neon aesthetic for luxury sportswear.',
+          image: 'https://images.unsplash.com/photo-1508739773434-c26b3d09e071?auto=format&fit=crop&w=800&q=80',
+          previewVideo: 'https://assets.mixkit.co/videos/preview/mixkit-aerial-view-of-city-traffic-at-night-42777-large.mp4',
+          director: 'Aurelia Vance',
+          palette: ['#00f2fe', '#7f00ff']
+        },
+        {
+          id: 'work-2',
+          title: 'THE MUSE • FASHION',
+          category: 'Reels',
+          views: '320.5K',
+          duration: '0:22',
+          aspect: '9:16',
+          badge: 'PRORES',
+          tagline: 'Haute couture high-speed portraiture with anamorphic flare.',
+          image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80',
+          previewVideo: 'https://assets.mixkit.co/videos/preview/mixkit-woman-with-neon-lights-on-her-face-41443-large.mp4',
+          director: 'Kaelen Thorne',
+          palette: ['#ff007f', '#00f2fe']
+        },
+        {
+          id: 'work-3',
+          title: 'SPEED • REEL',
+          category: 'Commercial',
+          views: '512.1K',
+          duration: '0:18',
+          aspect: '9:16',
+          badge: '120 FPS',
+          tagline: 'High-octane trackside adrenaline for electric hypercars.',
+          image: 'https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&w=800&q=80',
+          previewVideo: 'https://assets.mixkit.co/videos/preview/mixkit-car-drifting-on-a-racetrack-42775-large.mp4',
+          director: 'Marcus Reid',
+          palette: ['#00f2fe', '#ffffff']
+        },
+        {
+          id: 'work-4',
+          title: 'CINEMATIC BRAND • Commercial',
+          category: 'Commercial',
+          views: '89.4K',
+          duration: '0:30',
+          aspect: '9:16',
+          badge: 'ACES 35MM',
+          tagline: 'Moody indoor architectural lighting and artisanal watchcraft.',
+          image: 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=800&q=80',
+          previewVideo: 'https://assets.mixkit.co/videos/preview/mixkit-hands-adjusting-the-lens-of-a-camera-42866-large.mp4',
+          director: 'Aurelia Vance',
+          palette: ['#7f00ff', '#00f2fe']
+        },
+        {
+          id: 'work-5',
+          title: 'NEBULA • MUSIC VIDEO',
+          category: 'Narrative',
+          views: '245.0K',
+          duration: '0:28',
+          aspect: '9:16',
+          badge: 'ATMOS',
+          tagline: 'Surreal laser prisms and kinetic rhythm design.',
+          image: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=800&q=80',
+          previewVideo: 'https://assets.mixkit.co/videos/preview/mixkit-laser-lights-at-a-music-concert-42841-large.mp4',
+          director: 'Elena Rostova',
+          palette: ['#9d00ff', '#00f2fe']
+        },
+        {
+          id: 'work-6',
+          title: 'SOLITUDE • NARRATIVE',
+          category: 'Narrative',
+          views: '76.2K',
+          duration: '0:45',
+          aspect: '9:16',
+          badge: 'MONOCHROME',
+          tagline: 'Muted tones, sweeping glacial solitude, and human longing.',
+          image: 'https://images.unsplash.com/photo-1517411032315-54ef2cb783bb?auto=format&fit=crop&w=800&q=80',
+          previewVideo: 'https://assets.mixkit.co/videos/preview/mixkit-solitary-tree-in-a-snow-covered-field-42997-large.mp4',
+          director: 'Kaelen Thorne',
+          palette: ['#ffffff', '#00f2fe']
+        }
+      ];
+
+      const categories = ['All', 'Commercial', 'Reels', 'Narrative'];
+      const filteredItems = filter === 'All' ? items : items.filter(it => it.category === filter);
+
+      return (
+        <section id="work" className="py-24 sm:py-32 relative bg-pitch border-t border-borderDark">
+          
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            {/* Section Header: Title & Filter Tabs */}
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16 pb-8 border-b border-white/[0.08]">
+              
+              <div>
+                <span className="font-mono text-xs uppercase tracking-[0.25em] text-neonCyan block mb-2">
+                  Social Media Reels & Commercials
+                </span>
+                <h2 className="font-syne font-extrabold text-3xl sm:text-5xl tracking-tight text-white">
+                  SELECTED WORK
+                </h2>
+                <p className="text-white/50 text-sm mt-2 max-w-md">
+                  Crafted for high-retention feeds, television broadcasts, and vertical cinematic storytelling.
+                </p>
+              </div>
+
+              {/* Filter Tabs: Rounded pill-shaped buttons with active indicator */}
+              <div className="flex items-center gap-1.5 p-1 bg-surface rounded-full border border-white/10 self-start md:self-auto overflow-x-auto">
+                {categories.map((cat) => (
+                  <button
+                    key={cat}
+                    onClick={() => setFilter(cat)}
+                    data-cursor="FILTER"
+                    className={`px-4 sm:px-5 py-2 rounded-full text-xs font-semibold tracking-wider transition-all duration-300 ${
+                      filter === cat
+                        ? 'bg-white text-pitch shadow-lg shadow-white/20'
+                        : 'text-white/60 hover:text-white hover:bg-white/5'
+                    }`}
+                  >
+                    {cat}
+                  </button>
+                ))}
+              </div>
+
+            </div>
+
+            {/* Dense 9:16 Vertical Video Masonry Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+              {filteredItems.map((item) => (
+                <WorkCard key={item.id} item={item} onSelect={() => onSelectReel(item)} />
+              ))}
+            </div>
+
+            {/* Bottom Grid Metric Tracker */}
+            <div className="mt-16 p-6 rounded-2xl bg-surface/40 border border-white/5 flex flex-wrap items-center justify-between gap-4 font-mono text-xs text-white/50">
+              <div className="flex items-center gap-3">
+                <span className="w-2 h-2 rounded-full bg-neonCyan"></span>
+                <span>ASPECT RATIO: 9:16 VERTICAL NATIVE</span>
+              </div>
+              <div className="flex items-center gap-4">
+                <span>COLOR SPACE: REC.2020 / HDR10</span>
+                <span>•</span>
+                <span>FRAME RATE: 24.00 / 60.00 FPS</span>
+              </div>
+            </div>
+
+          </div>
+
+        </section>
+      );
+    }
+
+    // Sub-component: Individual 9:16 Video Card
+    function WorkCard({ item, onSelect }) {
+      const [isHovered, setIsHovered] = useState(false);
+      const videoRef = useRef(null);
+
+      const handleMouseEnter = () => {
+        setIsHovered(true);
+        if (videoRef.current) {
+          videoRef.current.play().catch(() => {});
+        }
+      };
+
+      const handleMouseLeave = () => {
+        setIsHovered(false);
+        if (videoRef.current) {
+          videoRef.current.pause();
+          videoRef.current.currentTime = 0;
+        }
+      };
+
+      return (
+        <div
+          onClick={onSelect}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+          data-cursor="PLAY REEL"
+          className="group relative cursor-pointer flex flex-col rounded-2xl overflow-hidden bg-charcoal border border-white/10 hover:border-neonCyan transition-all duration-500 hover:shadow-[0_0_30px_rgba(0,242,254,0.25)] transform hover:-translate-y-1.5"
+        >
+          {/* 9:16 Aspect Ratio Container */}
+          <div className="relative aspect-[9/16] w-full overflow-hidden bg-surface">
+            
+            {/* Background Poster Image */}
+            <img
+              src={item.image}
+              alt={item.title}
+              loading="lazy"
+              className={`absolute inset-0 w-full h-full object-cover object-center transition-all duration-700 ease-out ${
+                isHovered ? 'scale-105 opacity-0' : 'scale-100 opacity-100'
+              }`}
+            />
+
+            {/* Silent Looping Video on Hover */}
+            <video
+              ref={videoRef}
+              loop
+              muted
+              playsInline
+              preload="none"
+              className={`absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-500 ${
+                isHovered ? 'opacity-100' : 'opacity-0'
+              }`}
+            >
+              <source src={item.previewVideo} type="video/mp4" />
+            </video>
+
+            {/* Cinematic Gradient Vignette */}
+            <div className="absolute inset-0 bg-gradient-to-t from-pitch via-pitch/20 to-transparent opacity-90 group-hover:opacity-75 transition-opacity"></div>
+            <div className="absolute inset-0 bg-gradient-to-b from-pitch/60 via-transparent to-transparent"></div>
+
+            {/* Corner Badges */}
+            <div className="absolute top-4 left-4 right-4 flex items-center justify-between z-10 font-mono text-[10px]">
+              <span className="px-2 py-0.5 rounded bg-pitch/80 backdrop-blur-md border border-white/10 text-white/80">
+                [{item.duration}]
+              </span>
+              <span className="px-2 py-0.5 rounded bg-neonCyan/20 backdrop-blur-md border border-neonCyan/40 text-neonCyan font-bold">
+                {item.aspect}
+              </span>
+            </div>
+
+            {/* Hover Center Play Badge with Audio Wave effect */}
+            <div className={`absolute inset-0 flex items-center justify-center z-10 transition-all duration-300 ${
+              isHovered ? 'opacity-100 scale-100' : 'opacity-0 scale-90'
+            }`}>
+              <div className="w-14 h-14 rounded-full bg-neonCyan/20 border border-neonCyan backdrop-blur-md flex items-center justify-center text-neonCyan shadow-[0_0_20px_rgba(0,242,254,0.6)]">
+                <svg className="w-6 h-6 ml-0.5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M8 5v14l11-7z"/>
+                </svg>
+              </div>
+            </div>
+
+            {/* Overlay Info at bottom of video */}
+            <div className="absolute bottom-4 left-4 right-4 z-10">
+              <span className="text-[10px] font-mono text-neonCyan uppercase tracking-widest block mb-1">
+                {item.category} • DIR. {item.director}
+              </span>
+              <h3 className="font-syne font-bold text-lg sm:text-xl text-white group-hover:text-neonCyan transition-colors">
+                {item.title}
+              </h3>
+              <p className="text-white/60 text-xs mt-1 line-clamp-2 leading-relaxed">
+                {item.tagline}
+              </p>
+            </div>
+
+            {/* Corner Bracket Camera Accents */}
+            <span className="absolute top-2 left-2 text-[9px] font-mono text-white/20 group-hover:text-neonCyan transition-colors">┌</span>
+            <span className="absolute top-2 right-2 text-[9px] font-mono text-white/20 group-hover:text-neonCyan transition-colors">┐</span>
+            <span className="absolute bottom-2 left-2 text-[9px] font-mono text-white/20 group-hover:text-neonCyan transition-colors">└</span>
+            <span className="absolute bottom-2 right-2 text-[9px] font-mono text-white/20 group-hover:text-neonCyan transition-colors">┘</span>
+          </div>
+
+          {/* Metadata Bar below card */}
+          <div className="p-4 bg-surface/80 border-t border-white/5 flex items-center justify-between text-xs font-mono text-white/50">
+            <div className="flex items-center gap-1.5">
+              <span>{item.views} 👁️</span>
+              <span className="text-white/20">•</span>
+              <span className="text-neonCyan/80">{item.badge}</span>
+            </div>
+            <div className="flex items-center gap-1 text-[11px] text-white/70 group-hover:text-white transition-colors">
+              <span>WATCH REEL</span>
+              <span className="transform transition-transform group-hover:translate-x-1">→</span>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // ==========================================
+    // COMPONENT: Section 4 - Travel & Scenic Landscape Gallery
+    // ("Editorial Imagery")
+    // ==========================================
+    function ScenicGallery({ onSelectPhoto }) {
+      const photos = [
+        {
+          id: 'scenic-1',
+          number: '01',
+          location: 'Sólheimasandur, Iceland',
+          title: 'Basalt Horizon & Black Coast',
+          camera: 'Hasselblad H6D-100c',
+          lens: '35mm f/2.8',
+          settings: '1/250s • ISO 64',
+          format: 'vertical',
+          image: 'https://images.unsplash.com/photo-1504893524553-b855bce32c67?auto=format&fit=crop&w=1200&q=85',
+          editorial: 'Volcanic sediment meeting the frigid North Atlantic tide at freezing dusk.'
+        },
+        {
+          id: 'scenic-2',
+          number: '02',
+          location: 'Tre Cime di Lavaredo, Italy',
+          title: 'Dolomites Alpine Solitude',
+          camera: 'Fujifilm GFX 100 II',
+          lens: '45-100mm f/4',
+          settings: '1/500s • ISO 100',
+          format: 'tall-vertical',
+          image: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1200&q=85',
+          editorial: 'Perpendicular limestone spires breaching a low-lying sea of cloud.'
+        },
+        {
+          id: 'scenic-3',
+          number: '03',
+          location: 'Val d\'Orcia, Tuscany',
+          title: 'Dawn Mist Over San Quirico',
+          camera: 'Leica SL2',
+          lens: 'Summilux-SL 50mm f/1.4',
+          settings: '1/160s • ISO 50',
+          format: 'horizontal',
+          image: 'https://images.unsplash.com/photo-1516483638261-f4dbaf036963?auto=format&fit=crop&w=1600&q=85',
+          editorial: 'Ancient undulating ridges sculpted by golden morning dew and cypress silhouettes.'
+        },
+        {
+          id: 'scenic-4',
+          number: '04',
+          location: 'Namib-Naukluft, Namibia',
+          title: 'The Solitary Acacia at Deadvlei',
+          camera: 'Phase One IQ4 150MP',
+          lens: 'Schneider Kreuznach 80mm',
+          settings: '1/400s • ISO 50',
+          format: 'square',
+          image: 'https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=1400&q=85',
+          editorial: 'Nine-hundred-year-old petrified camelthorn against 300-meter scorched dunes.'
+        },
+        {
+          id: 'scenic-5',
+          number: '05',
+          location: 'Reinefjorden, Lofoten',
+          title: 'Sub-Zero Arctic Reflections',
+          camera: 'Sony FX9 Cinema Line',
+          lens: 'Cooke Anamorphic /i 40mm',
+          settings: '1/48s • ISO 800',
+          format: 'horizontal',
+          image: 'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?auto=format&fit=crop&w=1400&q=85',
+          editorial: 'Still mirror waters capturing twilight gradients within the Arctic circle.'
+        }
+      ];
+
+      return (
+        <section id="scenic" className="py-24 sm:py-36 relative bg-charcoal border-t border-borderDark overflow-hidden">
+          
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            {/* Section Header: Editorial Series Marker */}
+            <div className="mb-20">
+              <div className="flex items-center gap-3 mb-4">
+                <span className="h-[1px] w-8 bg-neonCyan"></span>
+                <span className="font-mono text-xs uppercase tracking-[0.3em] text-neonCyan">
+                  Aurelia Vance x Framemotion Series
+                </span>
+              </div>
+
+              <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+                <h2 className="font-serifExpressive italic font-bold text-3xl sm:text-6xl lg:text-7xl tracking-tight text-white">
+                  SCENIC & LANDSCAPES
+                </h2>
+                <p className="text-white/60 font-inter text-sm sm:text-base max-w-lg leading-relaxed">
+                  A masterclass in medium-format atmospheric cinematography & still storytelling. High-contrast, graded plates captured across six continents.
+                </p>
+              </div>
+            </div>
+
+            {/* Asymmetrical Editorial Photographic Masonry */}
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 items-start">
+              
+              {/* Photo 1: Iceland Black Sand (5 cols) */}
+              <div className="md:col-span-5" onClick={() => onSelectPhoto(photos[0])}>
+                <EditorialCard photo={photos[0]} heightClass="h-[480px] sm:h-[560px]" />
+              </div>
+
+              {/* Photo 2: Dolomites Misty Peaks (7 cols - offset tall) */}
+              <div className="md:col-span-7 md:-mt-8" onClick={() => onSelectPhoto(photos[1])}>
+                <EditorialCard photo={photos[1]} heightClass="h-[520px] sm:h-[620px]" />
+              </div>
+
+              {/* Photo 3: Tuscany Villa Rolling Dawn (8 cols - wide panorama) */}
+              <div className="md:col-span-8 mt-4" onClick={() => onSelectPhoto(photos[2])}>
+                <EditorialCard photo={photos[2]} heightClass="h-[360px] sm:h-[440px]" />
+              </div>
+
+              {/* Photo 4: Namibia Solitary Acacia (4 cols - square contrast) */}
+              <div className="md:col-span-4 mt-4" onClick={() => onSelectPhoto(photos[3])}>
+                <EditorialCard photo={photos[3]} heightClass="h-[360px] sm:h-[440px]" />
+              </div>
+
+              {/* Photo 5: Arctic Lofoten Fjord (Full 12 cols panorama banner) */}
+              <div className="md:col-span-12 mt-4" onClick={() => onSelectPhoto(photos[4])}>
+                <EditorialCard photo={photos[4]} heightClass="h-[320px] sm:h-[420px]" isBanner={true} />
+              </div>
+
+            </div>
+
+            {/* Gallery Statement Footer */}
+            <div className="mt-20 pt-8 border-t border-white/[0.08] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 font-mono text-xs text-white/40">
+              <div className="flex items-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-electricPurple"></span>
+                <span>COLOR WORKFLOW: ACES 1.3 REC.709 D65 / KODAK 2383 PRINT EMULATION</span>
+              </div>
+              <div>LIMITED PRINT & SYNDICATION ARCHIVE</div>
+            </div>
+
+          </div>
+
+        </section>
+      );
+    }
+
+    // Sub-component: Editorial Photo Card
+    function EditorialCard({ photo, heightClass, isBanner }) {
+      return (
+        <div 
+          className="group relative cursor-pointer overflow-hidden rounded-xl bg-pitch border border-white/10 hover:border-white/40 transition-all duration-700"
+          data-cursor="INSPECT"
+        >
+          <div className={`relative w-full ${heightClass} overflow-hidden`}>
+            <img
+              src={photo.image}
+              alt={photo.title}
+              loading="lazy"
+              className="w-full h-full object-cover object-center filter grayscale-[20%] contrast-110 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-1000 ease-out"
+            />
+            {/* Subtle Gradient Veil */}
+            <div className="absolute inset-0 bg-gradient-to-t from-pitch via-pitch/20 to-transparent opacity-80 group-hover:opacity-60 transition-opacity"></div>
+            
+            {/* Inspect / Zoom Badge on Hover */}
+            <div className="absolute top-4 right-4 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <span className="px-2.5 py-1 rounded-full bg-pitch/80 backdrop-blur-md border border-white/20 text-[10px] font-mono text-white tracking-widest uppercase">
+                EXIF / EXPAND ↗
+              </span>
+            </div>
+
+            {/* Bottom Overlay Details */}
+            <div className="absolute bottom-6 left-6 right-6 z-10">
+              <div className="flex items-baseline justify-between border-b border-white/20 pb-2 mb-2">
+                <span className="font-serifExpressive italic text-xl sm:text-2xl text-white group-hover:text-neonCyan transition-colors">
+                  {photo.title}
+                </span>
+                <span className="font-mono text-xs text-neonCyan font-bold tracking-widest">
+                  {photo.number}
+                </span>
+              </div>
+
+              <div className="flex flex-wrap items-center justify-between gap-2 text-[11px] font-mono text-white/60">
+                <span>{photo.location}</span>
+                <span className="text-white/40">{photo.camera} • {photo.lens}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // ==========================================
+    // COMPONENT: Section 5 - Services & Process Grid
+    // ==========================================
+    function ServicesProcess() {
+      const [activeService, setActiveService] = useState(0);
+
+      const services = [
+        {
+          phase: 'PHASE 01',
+          tag: 'DIRECTION & TREATMENT',
+          title: 'Pre-Production / Direction',
+          summary: 'From conceptual screenplay development to meticulous frame-by-frame treatment design.',
+          points: [
+            'Creative direction & visual identity scripting',
+            'Full treatment design & dynamic storyboards',
+            'Location scouting & international shoot permits',
+            'Casting curation & wardrobe narrative styling'
+          ],
+          gear: 'RED MONSTRO 8K • COOKE S7/i PRIMES'
+        },
+        {
+          phase: 'PHASE 02',
+          tag: 'PRINCIPAL PHOTOGRAPHY',
+          title: 'Cinematography & Event Coverage',
+          summary: 'High-speed capture, cinema gimbal rigs, and multi-camera live broadcast arrays.',
+          points: [
+            'ARRI Alexa Mini LF / RED V-Raptor multi-cam sets',
+            'High-speed Phantom Flex 4K capture up to 1000fps',
+            'Certified FPV cinematic chase drone piloting',
+            'Dynamic lighting design (Aputure, Astera tubes)'
+          ],
+          gear: 'ARRI ALEXA MINI LF • FPV RIGS • PHANTOM 4K'
+        },
+        {
+          phase: 'PHASE 03',
+          tag: 'FINISHING & SOUND',
+          title: 'Post-Production, Color & VFX',
+          summary: 'ACES color grading, bespoke sound design, Dolby Atmos mastering, and social cuts.',
+          points: [
+            'DaVinci Resolve studio color grading & film emulation',
+            'Dolby Atmos spatial audio design & bespoke scoring',
+            'Subtle CGI, 3D kinetic typography & cleanup VFX',
+            'Multi-aspect deliveries (16:9 4K, 9:16 Social, 1:1, 4:5)'
+          ],
+          gear: 'DAVINCI RESOLVE ADVANCED • DOLBY ATMOS'
+        }
+      ];
+
+      return (
+        <section id="services" className="py-24 sm:py-36 relative bg-pitch border-t border-borderDark">
+          
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            {/* Section Heading */}
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16 pb-8 border-b border-white/[0.08]">
+              <div>
+                <span className="font-mono text-xs uppercase tracking-[0.25em] text-neonCyan block mb-2">
+                  End-to-End Production Studio
+                </span>
+                <h2 className="font-syne font-extrabold text-3xl sm:text-5xl tracking-tight text-white">
+                  SERVICES & PROCESS
+                </h2>
+              </div>
+              <p className="text-white/50 text-sm max-w-md font-mono">
+                ENGINEERED FOR CINEMATIC SCALE AND SOCIAL PRECISION.
+              </p>
+            </div>
+
+            {/* 3-Column Interactive Breakdown */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              {services.map((svc, idx) => (
+                <div
+                  key={svc.phase}
+                  onMouseEnter={() => setActiveService(idx)}
+                  className={`group relative p-8 rounded-2xl transition-all duration-500 border ${
+                    activeService === idx
+                      ? 'bg-surface/90 border-neonCyan shadow-[0_0_35px_rgba(0,242,254,0.18)] transform -translate-y-2'
+                      : 'bg-surface/30 border-white/10 hover:border-white/30'
+                  }`}
+                  data-cursor="SERVICE"
+                >
+                  {/* Top Phase Header */}
+                  <div className="flex items-center justify-between mb-8 pb-4 border-b border-white/10">
+                    <span className="font-mono text-xs font-bold text-neonCyan tracking-widest">
+                      {svc.phase}
+                    </span>
+                    <span className="text-[10px] font-mono uppercase tracking-widest text-white/40">
+                      {svc.tag}
+                    </span>
+                  </div>
+
+                  {/* Title & Summary */}
+                  <h3 className="font-syne font-bold text-2xl text-white group-hover:text-neonCyan transition-colors mb-4">
+                    {svc.title}
+                  </h3>
+                  <p className="text-white/60 text-sm leading-relaxed mb-8">
+                    {svc.summary}
+                  </p>
+
+                  {/* Bullet Points */}
+                  <ul className="space-y-3 mb-10">
+                    {svc.points.map((pt, pIdx) => (
+                      <li key={pIdx} className="flex items-start gap-3 text-xs sm:text-sm text-white/80">
+                        <span className="w-1.5 h-1.5 rounded-full bg-neonCyan mt-1.5 flex-shrink-0"></span>
+                        <span>{pt}</span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  {/* Bottom Gear Tag */}
+                  <div className="pt-6 border-t border-white/10 flex items-center justify-between font-mono text-[10px] text-white/40">
+                    <span>HARDWARE / SUITE</span>
+                    <span className="text-neonCyan/80">{svc.gear}</span>
+                  </div>
+
+                  {/* Subtle Corner Brackets */}
+                  <span className="absolute top-2 left-2 text-[8px] font-mono text-white/20">┌</span>
+                  <span className="absolute top-2 right-2 text-[8px] font-mono text-white/20">┐</span>
+                </div>
+              ))}
+            </div>
+
+            {/* Production Pipeline Timeline Indicator */}
+            <div id="process" className="mt-20 p-8 rounded-2xl bg-surface/30 border border-white/5">
+              <div className="font-mono text-xs uppercase tracking-widest text-white/50 mb-6">
+                Standard Production Turnaround Timeline:
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 text-center font-mono text-xs">
+                <div className="p-4 rounded-xl bg-pitch border border-white/5">
+                  <div className="text-neonCyan font-bold text-base mb-1">DAYS 01–05</div>
+                  <div className="text-white/80 font-medium">Concept & Moodboard</div>
+                  <div className="text-[10px] text-white/40 mt-1">Script locked & visual styleguide</div>
+                </div>
+                <div className="p-4 rounded-xl bg-pitch border border-white/5">
+                  <div className="text-neonCyan font-bold text-base mb-1">DAYS 06–12</div>
+                  <div className="text-white/80 font-medium">Principal Photography</div>
+                  <div className="text-[10px] text-white/40 mt-1">8K capture, lighting, live monitoring</div>
+                </div>
+                <div className="p-4 rounded-xl bg-pitch border border-white/5">
+                  <div className="text-neonCyan font-bold text-base mb-1">DAYS 13–18</div>
+                  <div className="text-white/80 font-medium">Assembly & Color</div>
+                  <div className="text-[10px] text-white/40 mt-1">First cut review & ACES grade</div>
+                </div>
+                <div className="p-4 rounded-xl bg-pitch border border-white/5">
+                  <div className="text-neonCyan font-bold text-base mb-1">DAY 20</div>
+                  <div className="text-white/80 font-medium">Master Delivery</div>
+                  <div className="text-[10px] text-white/40 mt-1">ProRes 4444XQ & social cutdowns</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </section>
+      );
+    }
+
+    // ==========================================
+    // COMPONENT: Section 6 - Let's Collaborate Footer
+    // ==========================================
+    function CollaborateFooter({ contactRef }) {
+      const [formData, setFormData] = useState({
+        name: '',
+        email: '',
+        projectType: 'Commercial Campaign',
+        budget: '$15,000 – $35,000',
+        message: ''
+      });
+      const [isSubmitting, setIsSubmitting] = useState(false);
+      const [submitted, setSubmitted] = useState(false);
+      const [localTime, setLocalTime] = useState('');
+
+      useEffect(() => {
+        const updateClock = () => {
+          const now = new Date();
+          setLocalTime(now.toLocaleTimeString('en-US', { hour12: false }));
+        };
+        updateClock();
+        const interval = setInterval(updateClock, 1000);
+        return () => clearInterval(interval);
+      }, []);
+
+      const handleSubmit = (e) => {
+        e.preventDefault();
+        setIsSubmitting(true);
+        setTimeout(() => {
+          setIsSubmitting(false);
+          setSubmitted(true);
+        }, 1200);
+      };
+
+      return (
+        <footer id="contact" ref={contactRef} className="pt-24 sm:pt-36 pb-16 relative bg-pitch border-t border-borderDark overflow-hidden">
+          
+          {/* Subtle Ambient Radial Glow */}
+          <div className="absolute top-0 right-1/4 w-96 h-96 bg-neonCyan/5 rounded-full blur-3xl pointer-events-none"></div>
+          <div className="absolute bottom-0 left-10 w-96 h-96 bg-electricPurple/5 rounded-full blur-3xl pointer-events-none"></div>
+
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+              
+              {/* Left Column: Massive Bold Typography Block */}
+              <div className="lg:col-span-6 space-y-8">
+                
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface border border-white/10 text-xs font-mono text-neonCyan">
+                  <span className="w-2 h-2 rounded-full bg-recRed animate-rec-blink"></span>
+                  <span>COMMISSIONS OPEN Q3/Q4</span>
+                </div>
+
+                <h2 className="font-syne font-black text-3xl min-[400px]:text-4xl sm:text-6xl md:text-7xl tracking-tight leading-[0.95] text-white break-words">
+                  HAVE A VISION? <br />
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-neonCyan via-white to-electricPurple">
+                    LET’S CAPTURE IT.
+                  </span>
+                </h2>
+
+                <p className="text-white/60 text-base sm:text-lg max-w-md leading-relaxed">
+                  We partner with forward-thinking brands, visionary directors, and luxury labels to craft imagery that leaves an indelible mark.
+                </p>
+
+                {/* Camera Gear & Studio Status Narrative */}
+                <div className="p-5 sm:p-6 rounded-xl bg-surface/50 border border-white/5 space-y-3 font-mono text-xs">
+                  <div className="flex flex-col min-[380px]:flex-row min-[380px]:items-center justify-between gap-1 text-white/50">
+                    <span>STUDIO LOCAL TIME</span>
+                    <span className="text-white font-bold">{localTime} UTC+5:30</span>
+                  </div>
+                  <div className="flex flex-col min-[380px]:flex-row min-[380px]:items-center justify-between gap-1 text-white/50">
+                    <span>ACTIVE HUBS</span>
+                    <span className="text-neonCyan">LOS ANGELES • TOKYO • LONDON</span>
+                  </div>
+                  <div className="flex flex-col min-[380px]:flex-row min-[380px]:items-center justify-between gap-1 text-white/50">
+                    <span>STORAGE ARRAY</span>
+                    <span>12-BIT RAW • 8.4TB READY</span>
+                  </div>
+                  <div className="flex flex-col min-[380px]:flex-row min-[380px]:items-center justify-between gap-1 text-white/50">
+                    <span>STATUS</span>
+                    <span className="text-recRed font-bold">● STANDBY FOR PRODUCTION</span>
+                  </div>
+                </div>
+
+                {/* Direct Contact Links */}
+                <div className="pt-2 text-sm text-white/80 space-y-2">
+                  <div>
+                    <span className="text-white/40 font-mono text-xs block">DIRECT INQUIRIES</span>
+                    <a href="mailto:hello@framemotion.studio" className="font-syne text-base sm:text-lg font-bold hover:text-neonCyan transition-colors break-all">
+                      hello@framemotion.studio
+                    </a>
+                  </div>
+                  <div>
+                    <span className="text-white/40 font-mono text-xs block">PRODUCER DIRECT</span>
+                    <a href="tel:+13105550198" className="font-mono text-xs hover:text-neonCyan transition-colors">
+                      +1 (310) 555-0198
+                    </a>
+                  </div>
+                </div>
+
+              </div>
+
+              {/* Right Column: Interactive Dynamic Form */}
+              <div className="lg:col-span-6 bg-surface/70 backdrop-blur-xl p-8 sm:p-10 rounded-3xl border border-white/10 shadow-2xl relative">
+                
+                {/* Form Corner Accents */}
+                <span className="absolute top-3 left-3 text-[10px] font-mono text-white/20">┌ INPUT_TERMINAL</span>
+                <span className="absolute top-3 right-3 text-[10px] font-mono text-neonCyan/40">READY ┐</span>
+
+                {submitted ? (
+                  <div className="py-12 text-center space-y-4 animate-fadeIn">
+                    <div className="w-16 h-16 rounded-full bg-neonCyan/20 border border-neonCyan text-neonCyan flex items-center justify-center mx-auto text-2xl">
+                      ✓
+                    </div>
+                    <h3 className="font-syne font-bold text-2xl text-white">
+                      Transmission Received
+                    </h3>
+                    <p className="text-white/60 text-sm max-w-sm mx-auto">
+                      Thank you, <span className="text-neonCyan">{formData.name}</span>. Our lead creative producer will review your project brief and reply within 24 hours.
+                    </p>
+                    <button
+                      onClick={() => setSubmitted(false)}
+                      className="mt-6 px-6 py-2 rounded-full border border-white/20 text-xs font-mono text-white/80 hover:text-white hover:border-neonCyan transition-colors"
+                    >
+                      SEND ANOTHER BRIEF
+                    </button>
+                  </div>
+                ) : (
+                  <form onSubmit={handleSubmit} className="space-y-6 pt-4">
+                    
+                    {/* Name */}
+                    <div>
+                      <label className="block text-xs font-mono uppercase tracking-wider text-white/70 mb-2">
+                        Your Name / Organization *
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        value={formData.name}
+                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                        placeholder="e.g. Elena Vance (L’Oréal)"
+                        className="w-full px-4 py-3 rounded-xl bg-pitch/80 border border-white/15 focus:border-neonCyan focus:ring-1 focus:ring-neonCyan text-white text-sm placeholder-white/20 transition-all outline-none"
+                      />
+                    </div>
+
+                    {/* Email */}
+                    <div>
+                      <label className="block text-xs font-mono uppercase tracking-wider text-white/70 mb-2">
+                        Email Address *
+                      </label>
+                      <input
+                        type="email"
+                        required
+                        value={formData.email}
+                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                        placeholder="elena@company.com"
+                        className="w-full px-4 py-3 rounded-xl bg-pitch/80 border border-white/15 focus:border-neonCyan focus:ring-1 focus:ring-neonCyan text-white text-sm placeholder-white/20 transition-all outline-none"
+                      />
+                    </div>
+
+                    {/* Project Type Dropdown */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-xs font-mono uppercase tracking-wider text-white/70 mb-2">
+                          Project Type
+                        </label>
+                        <select
+                          value={formData.projectType}
+                          onChange={(e) => setFormData({ ...formData, projectType: e.target.value })}
+                          className="w-full px-4 py-3 rounded-xl bg-pitch/80 border border-white/15 focus:border-neonCyan text-white text-sm transition-all outline-none cursor-pointer"
+                        >
+                          <option value="Commercial Campaign">Commercial Campaign</option>
+                          <option value="Social Media Reels / TikTok">Social Media Reels (9:16)</option>
+                          <option value="Travel / Scenic Documentary">Travel & Scenic Editorial</option>
+                          <option value="Multi-Cam Live Production">Multi-Cam Live Coverage</option>
+                          <option value="Music Video Finishing">Music Video / Color & VFX</option>
+                        </select>
+                      </div>
+
+                      {/* Estimated Budget */}
+                      <div>
+                        <label className="block text-xs font-mono uppercase tracking-wider text-white/70 mb-2">
+                          Estimated Budget
+                        </label>
+                        <select
+                          value={formData.budget}
+                          onChange={(e) => setFormData({ ...formData, budget: e.target.value })}
+                          className="w-full px-4 py-3 rounded-xl bg-pitch/80 border border-white/15 focus:border-neonCyan text-white text-sm transition-all outline-none cursor-pointer"
+                        >
+                          <option value="$10,000 – $25,000">$10,000 – $25,000</option>
+                          <option value="$25,000 – $50,000">$25,000 – $50,000</option>
+                          <option value="$50,000 – $100,000">$50,000 – $100,000</option>
+                          <option value="$100,000+">$100,000+ (Global Campaign)</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    {/* Message */}
+                    <div>
+                      <label className="block text-xs font-mono uppercase tracking-wider text-white/70 mb-2">
+                        Project Brief & Vision *
+                      </label>
+                      <textarea
+                        rows="4"
+                        required
+                        value={formData.message}
+                        onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                        placeholder="Tell us about the narrative, target timeline, aesthetic references..."
+                        className="w-full px-4 py-3 rounded-xl bg-pitch/80 border border-white/15 focus:border-neonCyan focus:ring-1 focus:ring-neonCyan text-white text-sm placeholder-white/20 transition-all outline-none resize-none"
+                      ></textarea>
+                    </div>
+
+                    {/* Submit Button: "Start a Project" with pulsing cyan hover state */}
+                    <button
+                      type="submit"
+                      disabled={isSubmitting}
+                      data-cursor="SUBMIT"
+                      className="w-full relative group overflow-hidden rounded-xl p-[1.5px] focus:outline-none transition-all duration-300"
+                    >
+                      <span className="absolute inset-0 bg-gradient-to-r from-neonCyan via-electricPurple to-neonCyan rounded-xl opacity-90 group-hover:opacity-100 blur-[2px] transition-all"></span>
+                      <span className="relative flex items-center justify-center gap-3 w-full py-4 rounded-xl bg-pitch transition-all duration-300 group-hover:bg-pitch/80 text-sm font-bold tracking-widest uppercase text-white group-hover:text-neonCyan shadow-lg">
+                        {isSubmitting ? (
+                          <>
+                            <span className="w-3 h-3 rounded-full border-2 border-neonCyan border-t-transparent animate-spin"></span>
+                            <span>ENCRYPTING BRIEF...</span>
+                          </>
+                        ) : (
+                          <>
+                            <span>START A PROJECT</span>
+                            <span className="text-neonCyan text-base group-hover:translate-x-1 transition-transform">→</span>
+                          </>
+                        )}
+                      </span>
+                    </button>
+
+                  </form>
+                )}
+
+              </div>
+
+            </div>
+
+            {/* Bottom Bar: Social Links, Copyright, Local Time */}
+            <div className="mt-24 pt-8 border-t border-white/[0.08] flex flex-col md:flex-row items-center justify-between gap-6 font-mono text-xs text-white/50">
+              
+              {/* Left: Copyright */}
+              <div>
+                © 2026 Framemotion Studios Inc. All rights reserved. Directed by Emotion.
+              </div>
+
+              {/* Center: Social Links */}
+              <div className="flex items-center space-x-6 text-white/70">
+                {[
+                  { name: 'VIMEO', href: '#' },
+                  { name: 'INSTAGRAM', href: '#' },
+                  { name: 'YOUTUBE', href: '#' },
+                  { name: 'BEHANCE', href: '#' },
+                  { name: 'X / TWITTER', href: '#' }
+                ].map((s) => (
+                  <a
+                    key={s.name}
+                    href={s.href}
+                    data-cursor="LINK"
+                    className="hover:text-neonCyan transition-colors"
+                  >
+                    {s.name}
+                  </a>
+                ))}
+              </div>
+
+              {/* Right: Technical Specs */}
+              <div className="text-right text-[11px] text-white/40">
+                <span>ENCODED 4K DCI • SHOT ON ARRI & RED</span>
+              </div>
+
+            </div>
+
+          </div>
+
+        </footer>
+      );
+    }
+
+    // ==========================================
+    // COMPONENT: Showreel Modal (Full Screen Video Reel)
+    // ==========================================
+    function ShowreelModal({ isOpen, onClose }) {
+      if (!isOpen) return null;
+
+      return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 backdrop-blur-2xl p-4 sm:p-8 animate-fadeIn">
+          {/* Close Button */}
+          <button
+            onClick={onClose}
+            className="absolute top-6 right-6 z-50 text-white/60 hover:text-white p-2 rounded-full bg-white/10 hover:bg-white/20 transition-all"
+            data-cursor="CLOSE"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+
+          {/* Modal Card */}
+          <div className="relative w-full max-w-5xl aspect-video bg-pitch rounded-2xl overflow-hidden border border-white/20 shadow-[0_0_80px_rgba(0,242,254,0.3)]">
+            
+            {/* Clapperboard Slates Top Bar */}
+            <div className="absolute top-0 left-0 right-0 z-20 bg-pitch/90 backdrop-blur-md px-6 py-3 border-b border-white/10 flex items-center justify-between font-mono text-xs">
+              <div className="flex items-center gap-3">
+                <span className="w-2 h-2 rounded-full bg-recRed animate-rec-blink"></span>
+                <span className="font-bold text-white">REEL_2026_MASTER_4K.MOV</span>
+              </div>
+              <div className="text-white/50 hidden sm:block">
+                ACEScc • PRORES 4444 • 24.000 FPS
+              </div>
+            </div>
+
+            {/* Video Player */}
+            <video
+              autoPlay
+              controls
+              playsInline
+              className="w-full h-full object-cover pt-10"
+              poster="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=2000&q=85"
+            >
+              <source src="https://assets.mixkit.co/videos/preview/mixkit-fog-over-the-mountain-peaks-42998-large.mp4" type="video/mp4" />
+            </video>
+          </div>
+        </div>
+      );
+    }
+
+    // ==========================================
+    // COMPONENT: Reel 9:16 Social Player Modal
+    // ==========================================
+    function ReelModal({ reel, onClose }) {
+      if (!reel) return null;
+
+      return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 backdrop-blur-2xl p-4 animate-fadeIn">
+          {/* Close Button */}
+          <button
+            onClick={onClose}
+            className="absolute top-6 right-6 z-50 text-white/60 hover:text-white p-2.5 rounded-full bg-white/10 hover:bg-white/20 transition-all"
+            data-cursor="CLOSE"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+
+          <div className="flex flex-col lg:flex-row items-center gap-6 max-h-[90vh]">
+            {/* 9:16 Video Player Container */}
+            <div className="relative h-[78vh] aspect-[9/16] rounded-2xl overflow-hidden bg-pitch border border-neonCyan/50 shadow-[0_0_50px_rgba(0,242,254,0.3)]">
+              <video
+                autoPlay
+                loop
+                controls
+                playsInline
+                className="w-full h-full object-cover"
+                poster={reel.image}
+              >
+                <source src={reel.previewVideo} type="video/mp4" />
+              </video>
+            </div>
+
+            {/* Reel Details & Story Breakdown */}
+            <div className="max-w-sm text-left bg-surface/90 p-6 rounded-2xl border border-white/10 font-mono text-xs space-y-4">
+              <div className="flex items-center justify-between text-neonCyan font-bold">
+                <span>{reel.category}</span>
+                <span>{reel.badge}</span>
+              </div>
+              <h3 className="font-syne font-bold text-xl text-white">
+                {reel.title}
+              </h3>
+              <p className="text-white/60 text-xs leading-relaxed font-inter">
+                {reel.tagline}
+              </p>
+              <div className="pt-2 border-t border-white/10 space-y-2 text-white/50 text-[11px]">
+                <div className="flex justify-between">
+                  <span>DIRECTOR:</span>
+                  <span className="text-white">{reel.director}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>VIEWS:</span>
+                  <span className="text-white">{reel.views}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>DURATION:</span>
+                  <span className="text-white">{reel.duration}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>ASPECT RATIO:</span>
+                  <span className="text-neonCyan">9:16 Vertical Native</span>
+                </div>
+              </div>
+              <button
+                onClick={onClose}
+                className="w-full py-2.5 rounded-lg bg-white/10 hover:bg-neonCyan hover:text-pitch font-bold transition-colors text-white"
+              >
+                BACK TO GALLERY
+              </button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // ==========================================
+    // COMPONENT: Scenic Editorial Lightbox Modal
+    // ==========================================
+    function LightboxModal({ photo, onClose }) {
+      if (!photo) return null;
+
+      return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 backdrop-blur-2xl p-4 sm:p-8 animate-fadeIn">
+          {/* Close Button */}
+          <button
+            onClick={onClose}
+            className="absolute top-6 right-6 z-50 text-white/60 hover:text-white p-2.5 rounded-full bg-white/10 hover:bg-white/20 transition-all"
+            data-cursor="CLOSE"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+
+          <div className="relative max-w-6xl w-full max-h-[92vh] flex flex-col items-center">
+            {/* Main Image */}
+            <div className="relative max-h-[75vh] overflow-hidden rounded-xl border border-white/20 shadow-2xl">
+              <img
+                src={photo.image}
+                alt={photo.title}
+                className="max-h-[75vh] w-auto object-contain"
+              />
+            </div>
+
+            {/* EXIF Metadata Card */}
+            <div className="w-full mt-4 p-4 rounded-xl bg-surface/90 border border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 font-mono text-xs">
+              <div>
+                <span className="text-neonCyan font-bold mr-2">{photo.number}</span>
+                <span className="font-serifExpressive italic text-lg text-white mr-3">{photo.title}</span>
+                <span className="text-white/50">{photo.location}</span>
+              </div>
+              <div className="flex items-center gap-4 text-white/60 text-[11px]">
+                <span>{photo.camera}</span>
+                <span>•</span>
+                <span>{photo.lens}</span>
+                <span>•</span>
+                <span className="text-neonCyan">{photo.settings}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // ==========================================
+    // MAIN APP COMPONENT
+    // ==========================================
+    function App() {
+      const [showreelOpen, setShowreelOpen] = useState(false);
+      const [selectedReel, setSelectedReel] = useState(null);
+      const [selectedPhoto, setSelectedPhoto] = useState(null);
+      const [letterboxActive, setLetterboxActive] = useState(false);
+      const [audioPlaying, setAudioPlaying] = useState(false);
+      const contactRef = useRef(null);
+
+      // Toggle 2.39:1 Anamorphic Scope Letterbox bars
+      const handleToggleLetterbox = () => {
+        const topBar = document.getElementById('letterbox-top');
+        const bottomBar = document.getElementById('letterbox-bottom');
+        const nextState = !letterboxActive;
+        setLetterboxActive(nextState);
+        if (topBar && bottomBar) {
+          topBar.style.height = nextState ? '60px' : '0';
+          bottomBar.style.height = nextState ? '60px' : '0';
+        }
+      };
+
+      // Toggle Sound Synthesis
+      const handleToggleAudio = () => {
+        const newState = audioEngine.toggle();
+        setAudioPlaying(newState);
+      };
+
+      const handleScrollToContact = () => {
+        if (contactRef.current) {
+          contactRef.current.scrollIntoView({ behavior: 'smooth' });
+        }
+      };
+
+      const handleScrollToWork = () => {
+        const el = document.getElementById('work');
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth' });
+        }
+      };
+
+      return (
+        <div className="min-h-screen relative selection:bg-neonCyan selection:text-pitch">
+          {/* Custom Cinema Cursor Reticle */}
+          <CustomCursor />
+
+          {/* Navigation & Header */}
+          <Header
+            onOpenContact={handleScrollToContact}
+            onToggleLetterbox={handleToggleLetterbox}
+            letterboxActive={letterboxActive}
+            audioPlaying={audioPlaying}
+            onToggleAudio={handleToggleAudio}
+          />
+
+          {/* Main Sections */}
+          <main>
+            {/* Section 2: Hero Section */}
+            <Hero
+              onOpenReel={() => setShowreelOpen(true)}
+              onScrollToWork={handleScrollToWork}
+            />
+
+            {/* Section 3: Selected Work Filter & Vertical 9:16 Masonry Grid */}
+            <SelectedWork
+              onSelectReel={(reel) => setSelectedReel(reel)}
+            />
+
+            {/* Section 4: Travel & Scenic Landscape Gallery */}
+            <ScenicGallery
+              onSelectPhoto={(photo) => setSelectedPhoto(photo)}
+            />
+
+            {/* Section 5: Services & Process Grid */}
+            <ServicesProcess />
+
+            {/* Section 6: Let's Collaborate Footer */}
+            <CollaborateFooter contactRef={contactRef} />
+          </main>
+
+          {/* Modals */}
+          <ShowreelModal
+            isOpen={showreelOpen}
+            onClose={() => setShowreelOpen(false)}
+          />
+
+          <ReelModal
+            reel={selectedReel}
+            onClose={() => setSelectedReel(null)}
+          />
+
+          <LightboxModal
+            photo={selectedPhoto}
+            onClose={() => setSelectedPhoto(null)}
+          />
+        </div>
+      );
+    }
+
+    // Render the React application
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+</html>
