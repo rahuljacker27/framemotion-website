@@ -8,28 +8,31 @@ export default {
   theme: {
     extend: {
       colors: {
-        pitch: '#050505',
-        charcoal: '#0F0F11',
-        surface: '#151518',
-        surfaceLight: '#1C1C22',
+        pitch: '#000000',
+        charcoal: '#111111',
+        charcoalDark: '#080808',
+        charcoalLight: '#1a1a1a',
+        surface: '#121214',
+        surfaceLight: '#18181c',
         borderDark: 'rgba(255, 255, 255, 0.08)',
-        borderGlow: 'rgba(0, 242, 254, 0.35)',
+        borderGlow: 'rgba(0, 242, 254, 0.4)',
         neonCyan: '#00f2fe',
         neonCyanMuted: 'rgba(0, 242, 254, 0.15)',
-        electricPurple: '#7f00ff',
-        electricPurpleMuted: 'rgba(127, 0, 255, 0.15)',
         recRed: '#ff0055',
       },
       fontFamily: {
+        syncopate: ['Syncopate', 'sans-serif'],
         syne: ['Syne', 'sans-serif'],
-        serifExpressive: ['"Playfair Display"', 'Georgia', 'serif'],
+        monument: ['"Monument Extended"', 'Syncopate', 'Syne', 'sans-serif'],
         inter: ['Inter', 'sans-serif'],
         mono: ['"Space Mono"', 'monospace'],
       },
       animation: {
         'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
         'rec-blink': 'recBlink 1.2s ease-in-out infinite',
-        'radar-spin': 'spin 12s linear infinite',
+        'marquee': 'marquee 25s linear infinite',
+        'marquee-reverse': 'marqueeReverse 25s linear infinite',
+        'float-slow': 'float 5s ease-in-out infinite',
         'glow-pulse': 'glowPulse 3s ease-in-out infinite',
       },
       keyframes: {
@@ -37,9 +40,21 @@ export default {
           '0%, 100%': { opacity: '1', transform: 'scale(1)' },
           '50%': { opacity: '0.2', transform: 'scale(0.85)' },
         },
+        marquee: {
+          '0%': { transform: 'translateX(0%)' },
+          '100%': { transform: 'translateX(-50%)' },
+        },
+        marqueeReverse: {
+          '0%': { transform: 'translateX(-50%)' },
+          '100%': { transform: 'translateX(0%)' },
+        },
+        float: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-6px)' },
+        },
         glowPulse: {
-          '0%, 100%': { boxShadow: '0 0 15px rgba(0, 242, 254, 0.3)' },
-          '50%': { boxShadow: '0 0 35px rgba(0, 242, 254, 0.6), 0 0 10px rgba(127, 0, 255, 0.4)' },
+          '0%, 100%': { boxShadow: '0 0 15px rgba(0, 242, 254, 0.25)' },
+          '50%': { boxShadow: '0 0 30px rgba(0, 242, 254, 0.55)' },
         }
       }
     },
