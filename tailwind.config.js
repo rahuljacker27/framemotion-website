@@ -32,6 +32,8 @@ export default {
         'rec-blink': 'recBlink 1.2s ease-in-out infinite',
         'marquee': 'marquee 25s linear infinite',
         'marquee-reverse': 'marqueeReverse 25s linear infinite',
+        'marquee-left': 'marqueeLeft 34s linear infinite',
+        'marquee-right': 'marqueeRight 34s linear infinite',
         'float-slow': 'float 5s ease-in-out infinite',
         'glow-pulse': 'glowPulse 3s ease-in-out infinite',
       },
@@ -45,6 +47,14 @@ export default {
           '100%': { transform: 'translateX(-50%)' },
         },
         marqueeReverse: {
+          '0%': { transform: 'translateX(-50%)' },
+          '100%': { transform: 'translateX(0%)' },
+        },
+        marqueeLeft: {
+          '0%': { transform: 'translateX(0%)' },
+          '100%': { transform: 'translateX(-50%)' },
+        },
+        marqueeRight: {
           '0%': { transform: 'translateX(-50%)' },
           '100%': { transform: 'translateX(0%)' },
         },
