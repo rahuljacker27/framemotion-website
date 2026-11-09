@@ -8,6 +8,11 @@ export default function CustomCursor() {
 
   useEffect(() => {
     const handleMouseMove = (e) => {
+      // Suppress default cursor when hovering inside the Behind the Scenes section
+      if (e.target && e.target.closest && e.target.closest('#bts')) {
+        if (visible) setVisible(false);
+        return;
+      }
       setPos({ x: e.clientX, y: e.clientY });
       if (!visible) setVisible(true);
     };

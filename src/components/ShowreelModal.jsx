@@ -47,8 +47,10 @@ export default function ShowreelModal({ isOpen, onClose }) {
           className="w-full h-full object-cover pt-10"
           poster="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=2000&q=85"
         >
-          <source src="https://assets.mixkit.co/videos/preview/mixkit-fog-over-the-mountain-peaks-42998-large.mp4" type="video/mp4" />
-          <source src="https://cdn.coverr.co/videos/coverr-mist-in-the-mountains-2746/1080p.mp4" type="video/mp4" />
+          <source src="/videos/dtdl%20cricket%20website%20upload.mp4" type="video/mp4" />
+          <source src="./videos/dtdl%20cricket%20website%20upload.mp4" type="video/mp4" />
+          <source src="videos/dtdl%20cricket%20website%20upload.mp4" type="video/mp4" />
+          <source src="/videos/hero.mp4" type="video/mp4" />
         </video>
       </div>
     </div>
