@@ -401,27 +401,58 @@
     // SECTION 1: The Hero (The Pulse of the Frame)
     // ==========================================
     function Hero({ onOpenReel, onScrollToWork, onStartProduction }) {
+      const videoRef = useRef(null);
+
+      useEffect(() => {
+        if (videoRef.current) {
+          videoRef.current.muted = true;
+          videoRef.current.defaultMuted = true;
+          const playPromise = videoRef.current.play();
+          if (playPromise !== undefined) {
+            playPromise.catch(() => {});
+          }
+        }
+
+        const handleUserInteract = () => {
+          if (videoRef.current && videoRef.current.paused) {
+            videoRef.current.play().catch(() => {});
+          }
+        };
+
+        window.addEventListener('click', handleUserInteract, { once: true });
+        window.addEventListener('touchstart', handleUserInteract, { once: true });
+        window.addEventListener('scroll', handleUserInteract, { once: true });
+
+        return () => {
+          window.removeEventListener('click', handleUserInteract);
+          window.removeEventListener('touchstart', handleUserInteract);
+          window.removeEventListener('scroll', handleUserInteract);
+        };
+      }, []);
+
       return (
         <section id="hero" className="relative min-h-screen w-full flex flex-col justify-between overflow-hidden bg-black pt-24 pb-10">
           
           {/* Background Cinematic Video Layer */}
           <div className="absolute inset-0 w-full h-full z-0 overflow-hidden pointer-events-none">
             <video
+              ref={videoRef}
               autoPlay
               loop
               muted
               playsInline
+              preload="auto"
               poster="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=2000&q=85"
-              className="w-full h-full object-cover object-center scale-105 filter brightness-[0.45] contrast-125 saturate-[0.8] transition-transform duration-[12000ms] ease-out"
+              className="w-full h-full object-cover object-center scale-105 filter brightness-[0.7] contrast-110 saturate-[0.95] transition-transform duration-[12000ms] ease-out"
             >
-              <source src="https://assets.mixkit.co/videos/preview/mixkit-fog-over-the-mountain-peaks-42998-large.mp4" type="video/mp4" />
-              <source src="https://cdn.coverr.co/videos/coverr-mist-in-the-mountains-2746/1080p.mp4" type="video/mp4" />
+              <source src="/videos/dtdl%20cricket%20website%20upload.mp4" type="video/mp4" />
+              <source src="/videos/hero.mp4" type="video/mp4" />
+              <source src="videos/dtdl%20cricket%20website%20upload.mp4" type="video/mp4" />
             </video>
 
             {/* Overlays for Text Readability */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-black/70"></div>
-            <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-transparent to-black/80"></div>
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-transparent via-black/40 to-black"></div>
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-black/60 pointer-events-none"></div>
+            <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-transparent to-black/60 pointer-events-none"></div>
           </div>
 
           {/* Cinematic Viewfinder HUD */}
@@ -535,7 +566,7 @@
           description: 'Multi-camera precision and dynamic hybrid coverage for large-scale commercial events.',
           tags: ['Multi-Cam 8K', 'Hybrid Broadcast', 'Stage Lighting', 'Live Switched'],
           aspectRatio: '16:9',
-          videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-stage-lights-at-a-concert-4011-large.mp4',
+          videoUrl: '/videos/dtdl%20cricket%20website%20upload.mp4',
           posterUrl: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&w=1600&q=85',
           client: 'Global Summit & Talent Exhibition',
           year: '2025',
@@ -549,7 +580,7 @@
           description: 'Raw, natural destination aesthetics blended with polished narrative execution.',
           tags: ['Expedition 35mm', 'Kalpa Valley', 'Anamorphic Grade', 'Highland Drones'],
           aspectRatio: '16:9',
-          videoUrl: 'https://cdn.coverr.co/videos/coverr-mountains-under-the-clouds-5026/1080p.mp4',
+          videoUrl: '/videos/hero.mp4',
           posterUrl: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=1600&q=85',
           client: 'Himalayan Explorer Bureau',
           year: '2025',
@@ -2496,8 +2527,9 @@ function FooterCTA({ contactRef }) {
               className="w-full h-full object-cover pt-10"
               poster="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=2000&q=85"
             >
-              <source src="https://assets.mixkit.co/videos/preview/mixkit-fog-over-the-mountain-peaks-42998-large.mp4" type="video/mp4" />
-              <source src="https://cdn.coverr.co/videos/coverr-mist-in-the-mountains-2746/1080p.mp4" type="video/mp4" />
+              <source src="/videos/dtdl%20cricket%20website%20upload.mp4" type="video/mp4" />
+              <source src="/videos/hero.mp4" type="video/mp4" />
+              <source src="videos/dtdl%20cricket%20website%20upload.mp4" type="video/mp4" />
             </video>
           </div>
         </div>

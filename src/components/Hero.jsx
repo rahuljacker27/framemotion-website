@@ -3,7 +3,35 @@ import { ArrowDown, Play, Sparkles } from 'lucide-react';
 
 export default function Hero({ onOpenReel, onScrollToWork, onStartProduction }) {
   const containerRef = useRef(null);
+  const videoRef = useRef(null);
   const [scrollProgress, setScrollProgress] = useState(0);
+
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.muted = true;
+      videoRef.current.defaultMuted = true;
+      const playPromise = videoRef.current.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(() => {});
+      }
+    }
+
+    const handleUserInteract = () => {
+      if (videoRef.current && videoRef.current.paused) {
+        videoRef.current.play().catch(() => {});
+      }
+    };
+
+    window.addEventListener('click', handleUserInteract, { once: true });
+    window.addEventListener('touchstart', handleUserInteract, { once: true });
+    window.addEventListener('scroll', handleUserInteract, { once: true });
+
+    return () => {
+      window.removeEventListener('click', handleUserInteract);
+      window.removeEventListener('touchstart', handleUserInteract);
+      window.removeEventListener('scroll', handleUserInteract);
+    };
+  }, []);
 
   useEffect(() => {
     let animationFrameId;
@@ -91,10 +119,12 @@ export default function Hero({ onOpenReel, onScrollToWork, onStartProduction }) 
           {/* Full-Screen Looping Background Video Layer - 100% Clear & Vibrant */}
           <div className="absolute inset-0 w-full h-full z-0 overflow-hidden pointer-events-none">
             <video
+              ref={videoRef}
               autoPlay
               loop
               muted
               playsInline
+              preload="auto"
               poster="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=2000&q=85"
               className="w-full h-full object-cover object-center"
             >
