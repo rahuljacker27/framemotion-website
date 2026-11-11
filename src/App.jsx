@@ -2,6 +2,8 @@ import React, { useState, useRef } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import StoriesInMotion from './components/StoriesInMotion';
+import ClientShowcase from './components/ClientShowcase';
+import BehindTheScenes from './components/BehindTheScenes';
 import Manifesto from './components/Manifesto';
 import DigitalFlow from './components/DigitalFlow';
 import CapabilitiesMarquee from './components/CapabilitiesMarquee';
@@ -84,7 +86,13 @@ export default function App() {
           onSelectProject={(project) => setSelectedReel(project)}
         />
 
-        {/* Section 3: The Manifesto (The Vision Behind the Flow) */}
+        {/* Section 3: Commercial & Enterprise Client Showcase (3-Row Marquee) */}
+        <ClientShowcase />
+
+        {/* Section 4: Behind the Scenes (South Indian Action Cinema Asymmetrical Grid) */}
+        <BehindTheScenes />
+
+        {/* Section 5: The Manifesto (The Vision Behind the Flow) */}
         <Manifesto />
 
         {/* Section 4: The Innovation Lab & Digital Flow */}

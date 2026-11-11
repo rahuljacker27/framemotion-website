@@ -16,6 +16,7 @@ export default function Navbar({ onOpenContact, onToggleLetterbox, letterboxActi
   const navLinks = [
     { label: 'About', href: '#about' },
     { label: 'Work', href: '#work' },
+    { label: 'BTS', href: '#bts' },
     { label: 'Capabilities', href: '#capabilities' },
     { label: 'Contact', href: '#contact' },
   ];
@@ -42,13 +43,14 @@ export default function Navbar({ onOpenContact, onToggleLetterbox, letterboxActi
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
           
-          {/* Left: Brand Logo Wordmark */}
+          {/* Left: Framemotion Official Brand Logo */}
           <a href="#" className="flex items-center gap-3 group focus:outline-none">
-            <div className="relative w-8 h-8 rounded border border-white/20 bg-charcoal flex items-center justify-center overflow-hidden transition-all duration-300 group-hover:border-neonCyan group-hover:shadow-[0_0_15px_rgba(0,242,254,0.35)]">
-              <div className="w-4 h-3 border border-white/80 rounded-[2px] relative flex items-center justify-center">
-                <div className="w-1.5 h-1.5 rounded-full bg-neonCyan"></div>
-                <span className="absolute -top-1 -right-1 w-1 h-1 bg-recRed rounded-full animate-rec-blink"></span>
-              </div>
+            <div className="relative h-9 sm:h-10 w-auto flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
+              <img
+                src="/Frame%20Motion%20Logo/framemotion-emblem.png?v=white"
+                alt="Frame Motion Logo"
+                className="h-8 sm:h-9 w-auto object-contain drop-shadow-[0_0_12px_rgba(0,242,254,0.35)]"
+              />
             </div>
 
             <div className="flex flex-col">

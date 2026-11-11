@@ -14,7 +14,7 @@ export default function CapabilitiesMarquee() {
   const fullList = [...tickerItems, ...tickerItems, ...tickerItems, ...tickerItems];
 
   return (
-    <section className="relative w-full py-8 sm:py-10 bg-black border-y border-white/10 overflow-hidden select-none">
+    <section id="capabilities" className="relative w-full py-8 sm:py-10 bg-black border-y border-white/10 overflow-hidden select-none">
       
       {/* Edge Shadow Vignettes for seamless gradient fade */}
       <div className="absolute top-0 bottom-0 left-0 w-20 sm:w-40 bg-gradient-to-r from-black to-transparent z-10 pointer-events-none"></div>

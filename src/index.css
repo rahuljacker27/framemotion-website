@@ -56,3 +56,22 @@
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+/* Seamless Infinite Marquee Animations */
+@keyframes marqueeLeft {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes marqueeRight {
+  0% { transform: translateX(-50%); }
+  100% { transform: translateX(0%); }
+}
+
+.animate-marquee-left {
+  animation: marqueeLeft 34s linear infinite;
+}
+
+.animate-marquee-right {
+  animation: marqueeRight 34s linear infinite;
+}
